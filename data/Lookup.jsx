@@ -1,40 +1,41 @@
 export default {
-    SUGGSTIONS: ['Create Todo App', 'Create a Budget Track App', 'Create a Login and Signup page',
-    "Develop a Task Management App",
-    "Create a Fully Responsive Blog Platform",
-    "Design a Minimalistic Note-Taking App",
-    "Develop a Customizable Landing Page",
-    "Develop a Recipe Sharing Platform",
-    "Create a Fitness Tracking App",
-    "Develop a Personal Finance Management Tool",
-    "Create a Language Learning App",
-    "Build a Virtual Event Platform",
-    "Create a Music Streaming Service"
+  SUGGSTIONS: [
+    "Develop a Real-Time Weather App",
+    "Create an E-commerce Platform",
+    "Build a Social Media Dashboard",
+    "Develop a Recipe Recommendation App",
+    "Create a Movie Booking System",
+    "Build a Personal Portfolio Website",
+    "Develop a Task Automation Tool",
+    "Create a Meditation and Mindfulness App",
+    "Build a Travel Planner App",
+    "Develop an Online Quiz Platform",
+    "Create a Health & Fitness Tracker",
+    "Build a Collaborative Note-Taking App"
   ],
 
-    DEFAULT_FILE: {
-        '/public/index.html':
-        {
-            code: `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Document</title>
-              <script src="https://cdn.tailwindcss.com"></script>
-            </head>
-            <body>
-              <div id="root"></div>
-            </body>
-            </html>`
-        },
-        '/App.css': {
-            code: `@tailwind base;
-            @tailwind components;
-            @tailwind utilities;`
-        },
-        '/tailwind.config.js': {
-            code: `/** @type {import('tailwindcss').Config} */
+  DEFAULT_FILE: {
+    '/public/index.html': {
+      code: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
+      <body>
+        <div id="root"></div>
+      </body>
+      </html>`
+    },
+    '/App.css': {
+      code: `@tailwind base;
+@tailwind components;
+@tailwind utilities;`
+    },
+    '/tailwind.config.js': {
+      code: `/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -44,9 +45,9 @@ module.exports = {
   },
   plugins: [],
 }`
-        },
-        '/postcss.config.js': {
-  code: `/** @type {import('postcss-load-config').Config} */
+    },
+    '/postcss.config.js': {
+      code: `/** @type {import('postcss-load-config').Config} */
 const config = {
   plugins: {
     tailwindcss: {},
@@ -55,13 +56,12 @@ const config = {
 
 export default config;
 `
-}
+    }
+  },
 
-        },
-
-    DEPENDANCY: {
-            "@google/generative-ai": "^0.21.0",
-            "@heroicons/react": "^1.0.6",
+  DEPENDANCY: {
+    "@google/generative-ai": "^0.21.0",
+    "@heroicons/react": "^1.0.6",
     "@headlessui/react": "^1.7.17",
     "autoprefixer": "^10.0.0",
     "firebase": "^11.1.0",
@@ -80,5 +80,5 @@ export default config;
     "uuidv4": "^6.2.13",
     "uuid": "^11.1.0",
     "@mui/material": "^6.4.6"
-        }
-    }
+  }
+};

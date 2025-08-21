@@ -12,7 +12,7 @@ function Header() {
                             <Code className="h-5 w-5 text-white" />
                         </div>
                         <h1 className="text-xl font-bold text-white">
-                            AI Powered Website Builder
+                            SiteSculptor
                         </h1>
                     </div>
 
@@ -20,7 +20,7 @@ function Header() {
                     <div className="flex items-center">
                         <div className="flex items-center space-x-2 bg-green-500/10 text-green-400 px-3 py-1.5 rounded-full text-sm font-medium">
                             <Sparkles className="h-4 w-4" />
-                            <span>AI Ready</span>
+                            <span>All Rights @Sagar B J</span>
                         </div>
                     </div>
                 </div>
