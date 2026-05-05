@@ -1,25 +1,33 @@
-import { chatSession } from "@/configs/AiModel";
-import Prompt from "@/data/Prompt";
-import { NextResponse } from 'next/server';
+import { enhancePrompt } from "@/configs/AiModel";
+import { NextResponse } from "next/server";
 
-export async function POST(request) {
-    try {
-        const { prompt } = await request.json();
-        
-        const result = await chatSession.sendMessage([
-            Prompt.ENHANCE_PROMPT_RULES,
-            `Original prompt: ${prompt}`
-        ]);
-        
-        const text = result.response.text();
-        
-        return NextResponse.json({
-            enhancedPrompt: text.trim()
-        });
-    } catch (error) {
-        return NextResponse.json({ 
-            error: error.message,
-            success: false 
-        }, { status: 500 });
+export async function POST(req) {
+  try {
+    const { prompt } = await req.json();
+
+    if (!prompt) {
+      return NextResponse.json(
+        { error: "Prompt is required" },
+        { status: 400 }
+      );
     }
-} 
+
+    const result = await enhancePrompt(prompt);
+
+    return NextResponse.json({
+      enhancedPrompt: result.trim(),
+      success: true,
+    });
+
+  } catch (error) {
+    console.error("Enhance Prompt Error:", error);
+
+    return NextResponse.json(
+      {
+        error: error.message,
+        success: false,
+      },
+      { status: 500 }
+    );
+  }
+}

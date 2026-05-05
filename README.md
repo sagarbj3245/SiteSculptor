@@ -1,7 +1,7 @@
 ## 🚀 SiteSculptor
 
 **Build Stunning Websites with AI Assistance**
-Transform your ideas into fully functional websites using cutting-edge AI technology. This project leverages **Next.js, Tailwind CSS, and the Gemini AI model** to streamline web development.
+Transform your ideas into fully functional websites using cutting-edge AI technology. This project leverages **Next.js, Tailwind CSS, and OpenAI GPT** to streamline web development.
 
 ---
 
@@ -23,7 +23,7 @@ Transform your ideas into fully functional websites using cutting-edge AI techno
 
 * **Next.js 14**: Server-side rendering, API routes, and optimized performance.
 * **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
-* **AI Integration**: Powered by Gemini Flash 2.0 for intelligent content generation.
+* **AI Integration**: Powered by OpenAI GPT for intelligent content generation.
 
 ---
 
@@ -33,7 +33,7 @@ Transform your ideas into fully functional websites using cutting-edge AI techno
 
 * Node.js v18+
 * npm, yarn, or pnpm
-* Gemini API key (for AI features)
+* OpenAI API key (for AI features)
 
 ### Installation
 
@@ -54,7 +54,7 @@ Transform your ideas into fully functional websites using cutting-edge AI techno
    Create a `.env.local` file in the root directory and add the following:
 
    ```env
-   GEMINI_API_KEY=your_api_key_here
+   OPENAI_API_KEY=your_openai_api_key_here
    NEXT_PUBLIC_CONVEX_URL=your_convex_url
    ```
 
@@ -97,7 +97,7 @@ Transform your ideas into fully functional websites using cutting-edge AI techno
 | **Next.js**        | Framework for SSR & Routing  |
 | **Tailwind CSS**   | Styling & Responsive Design  |
 | **Convex**         | Real-time Database & Backend |
-| **Gemini API**     | AI Content Generation        |
+| **OpenAI API**     | AI Content Generation        |
 | **React Markdown** | Render AI-generated Markdown |
 
 ---
@@ -107,7 +107,7 @@ Transform your ideas into fully functional websites using cutting-edge AI techno
 * **[Next.js: Official Guide](https://nextjs.org/docs)**
 * **[Tailwind CSS: Documentation](https://tailwindcss.com/docs)**
 * **[Convex Setup: Getting Started](https://docs.convex.dev/quickstart)**
-* **[Gemini API: API Reference](https://ai.google.dev/docs)**
+* **[OpenAI API: API Reference](https://platform.openai.com/docs)**
 
 ---
 
@@ -119,14 +119,14 @@ Deploy to Vercel in one click:
 
 ### Required Environment Variables:
 
-* `GEMINI_API_KEY`
+* `OPENAI_API_KEY`
 * `NEXT_PUBLIC_CONVEX_URL`
 
 ---
 
 ## 🙌 Acknowledgements
 
-* **Google Gemini AI** for advanced language models
+* **OpenAI GPT** for advanced language models
 * **Vercel** for hosting support
 * **Convex** for real-time backend infrastructure
 

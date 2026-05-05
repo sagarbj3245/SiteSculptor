@@ -19,7 +19,7 @@ function Hero() {
             role: 'user',
             content: input
         }
-        setMessages(msg);
+        setMessages([msg]);
         const workspaceID = await CreateWorkspace({
             messages: [msg]
         });

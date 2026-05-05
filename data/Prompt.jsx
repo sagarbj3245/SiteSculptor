@@ -10,90 +10,49 @@ export default {
     `,
 
     CODE_GEN_PROMPT: dedent`
-    Generate a fully structured React project using Vite.  
-Ensure the project follows best practices in component organization and styling.  
+    Generate a fully structured React project using Vite and Tailwind CSS.
+Ensure the project follows best practices in component organization, styling, and responsive design.
 
-**Project Requirements:**  
-- Use **React** as the framework.  
-- Add as many functional features as possible.  
-- **Do not create an App.jsx file. Use App.js instead** and modify it accordingly.  
-- Use **Tailwind CSS** for styling and create a modern, visually appealing UI.  
-- Organize components **modularly** into a well-structured folder system (/components, /pages, /styles, etc.).  
-- Include reusable components like **buttons, cards, and forms** where applicable.  
-- Use **lucide-react** icons if needed for UI enhancement.  
-- Do not create a src folder.
+**Project Requirements:**
+- Use **React** with **Vite**.
+- Use **App.js** as the main component entry file.
+- Do not create a **src** folder.
+- Use **Tailwind CSS** for styling.
+- Use **lucide-react** icons if needed.
+- Organize components cleanly if multiple files are required.
+- Include a functional homepage and responsive layout.
 
-**Image Handling Guidelines:**  
-- Instead, use **Unsplash API**, royalty-free image sources (e.g., Pexels, Pixabay).
-- Do not use images from unsplash.com.
-- use images from the internet.
+**Required dependencies:**
+- "postcss": "^8"
+- "tailwindcss": "^3.4.1"
+- "autoprefixer": "^10.0.0"
+- "tailwind-merge": "^2.4.0"
+- "tailwindcss-animate": "^1.0.0"
+- "lucide-react": "latest"
+- "react": "^18.2.0"
+- "react-dom": "^18.2.0"
+- "vite": "^5.4.4"
 
-**Dependencies to Use:**  
-- "postcss": "^8"  
-- "tailwindcss": "^3.4.1"  
-- "autoprefixer": "^10.0.0"  
-- "uuid4": "^2.0.3"  
-- "tailwind-merge": "^2.4.0"  
-- "tailwindcss-animate": "^1.0.7"  
-- "lucide-react": "latest"  
-- "react-router-dom": "latest"  
-- "firebase": "^11.1.0"  
-- "@google/generative-ai": "^0.21.0"  
-- "@headlessui/react": "^1.7.17"  
-- "framer-motion": "^10.0.0"  
-- "react-icons": "^5.0.0"  
-- "uuid": "^11.1.0"  
-- "@mui/material": "^6.4.6"  
+Return only valid JSON in the following schema:
+{
+  "projectTitle": "",
+  "explanation": "",
+  "files": {
+    "/public/index.html": { "code": "" },
+    "/App.css": { "code": "" },
+    "/App.js": { "code": "" },
+    "/index.js": { "code": "" },
+    "/package.json": { "code": "" },
+    "/tailwind.config.js": { "code": "" },
+    "/postcss.config.js": { "code": "" }
+  }
+}
 
-    Return the response in JSON format with the following schema:
-    {
-      "projectTitle": "",
-      "explanation": "",
-      "files": {
-        "/App.js": {
-          "code": ""
-        },
-        ...
-      },
-      "generatedFiles": []
-    }
-
-    Here's the reformatted and improved version of your prompt:
-
-    Generate a programming code structure for a React project using Vite.
-    Do not create a App.jsx file. There is a App.js file in the project structure, rewrite it.
-    Use Tailwind css for styling. Create a well Designed UI. 
-
-    Return the response in JSON format with the following schema:
-
-    {
-      "projectTitle": "",
-      "explanation": "",
-      "files": {
-        "/App.js": {
-          "code": ""
-        },
-        ...
-      },
-      "generatedFiles": []
-    }
-
-    Ensure the files field contains all the created files, and the generatedFiles field contains the list of generated files:{
-    "/App.js": {
-      "code": "import React from 'react';\n\nfunction App() {\n  return (\n    <div>\n      <h1>Hello World</h1>\n    </div>\n  );\n}\n\nexport default App;\n"
-    }
-    }
-    
-    Also updaate the Package.json file with the needed dependencies.
-
-    Additionally, include an explanation of the project's structure, purpose, and additional instructions:
-    - For placeholder images use appropirate URLs.
-    - Add external images if needed.
-    - The lucide-react library is also available to be imported IF NECESSARY.
-    - Update the package.json file with the required dependencies.
-    - Do not use backend or database related.
-    `,
-    
+Include all the files listed in the "files" object.
+Do not include markdown fences, prose, or any extra text before or after the JSON.
+If you cannot generate one of the files, return it with an empty string value.
+The output must be valid JSON.
+`,    
     ENHANCE_PROMPT_RULES: dedent`
     You are a prompt enhancement expert and website designer(React + vite). Your task is to improve the given user prompt by:
     1. Making it more specific and detailed but..

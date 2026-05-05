@@ -71,14 +71,28 @@ function CodeView() {
       const PROMPT = JSON.stringify(messages) + " " + Prompt.CODE_GEN_PROMPT;
       const result = await axios.post("/api/gen-ai-code", { prompt: PROMPT });
 
-      const processedAiFiles = preprocessFiles(result.data?.files || {});
+      let aiFiles = result.data?.files;
+      if (!aiFiles && typeof result.data?.result === 'string') {
+        try {
+          const parsedResult = JSON.parse(result.data.result);
+          aiFiles = parsedResult?.files;
+        } catch {
+          aiFiles = undefined;
+        }
+      }
+
+      if (!aiFiles) {
+        console.error("Code generation produced no files", result.data);
+      }
+
+      const processedAiFiles = preprocessFiles(aiFiles || {});
       const mergedFiles = { ...Lookup.DEFAULT_FILE, ...processedAiFiles };
       setFiles(mergedFiles);
 
       if (id) {
         await updateFiles({
           workspaceId: id,
-          files: result.data?.files || {}, // Safe fallback
+          files: aiFiles || {},
         });
       }
     } catch (error) {
