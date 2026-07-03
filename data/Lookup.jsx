@@ -1,5 +1,5 @@
 export default {
-  SUGGSTIONS: [
+  SUGGESTIONS: [
     "Develop a Real-Time Weather App",
     "Create an E-commerce Platform",
     "Build a Social Media Dashboard",
@@ -59,12 +59,8 @@ export default config;
     }
   },
 
-  DEPENDANCY: {
-    "@google/generative-ai": "^0.21.0",
-    "@heroicons/react": "^1.0.6",
-    "@headlessui/react": "^1.7.17",
+  DEPENDENCY: {
     "autoprefixer": "^10.0.0",
-    "firebase": "^11.1.0",
     "framer-motion": "^10.0.0",
     "lucide-react": "latest",
     "postcss": "^8",
@@ -75,10 +71,6 @@ export default config;
     "react-toastify": "^10.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.1",
-    "tailwindcss-animate": "^1.0.7",
-    "uuid4": "^2.0.3",
-    "uuidv4": "^6.2.13",
-    "uuid": "^11.1.0",
-    "@mui/material": "^6.4.6"
+    "tailwindcss-animate": "^1.0.7"
   }
 };

@@ -18,6 +18,8 @@ import { api } from "@/convex/_generated/api";
 import { Loader2Icon, Download } from "lucide-react";
 import JSZip from "jszip";
 
+const PANE_HEIGHT = "calc(100vh - 11.5rem)";
+
 function CodeView() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("code");
@@ -68,11 +70,16 @@ function CodeView() {
   const generateAiCode = async () => {
     setLoading(true);
     try {
-      const PROMPT = JSON.stringify(messages) + " " + Prompt.CODE_GEN_PROMPT;
+      const isFollowUp = messages.length > 1;
+      const filesContext = isFollowUp
+        ? " CURRENT_FILES: " + JSON.stringify(files)
+        : "";
+      const PROMPT =
+        JSON.stringify(messages) + filesContext + " " + Prompt.CODE_GEN_PROMPT;
       const result = await axios.post("/api/gen-ai-code", { prompt: PROMPT });
 
       let aiFiles = result.data?.files;
-      if (!aiFiles && typeof result.data?.result === 'string') {
+      if (!aiFiles && typeof result.data?.result === "string") {
         try {
           const parsedResult = JSON.parse(result.data.result);
           aiFiles = parsedResult?.files;
@@ -124,7 +131,7 @@ function CodeView() {
         name: "generated-project",
         version: "1.0.0",
         private: true,
-        dependencies: Lookup.DEPENDANCY,
+        dependencies: Lookup.DEPENDENCY,
         scripts: {
           dev: "vite",
           build: "vite build",
@@ -148,43 +155,41 @@ function CodeView() {
   };
 
   return (
-    <div className="relative">
-      {/* Header */}
-      <div className="bg-[#181818] w-full p-2 border">
+    <div className="relative flex flex-col h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-7.5rem)] rounded-xl border border-neutral-800 bg-neutral-900/40 overflow-hidden">
+      <div className="w-full px-3 py-2 border-b border-neutral-800 bg-black/40">
         <div className="flex items-center justify-between">
-          <div className="flex items-center flex-wrap shrink-0 bg-black p-1 justify-center w-[140px] gap-3 rounded-full">
+          <div className="flex items-center shrink-0 bg-neutral-900 border border-neutral-800 p-1 gap-1 rounded-full">
             {["code", "preview"].map((tab) => (
-              <h2
+              <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`text-sm cursor-pointer ${
+                className={`text-sm px-4 py-1 rounded-full transition-colors duration-200 ${
                   activeTab === tab
-                    ? "text-blue-500 bg-blue-500 bg-opacity-25 p-1 px-2 rounded-full"
-                    : ""
+                    ? "bg-white text-black font-medium"
+                    : "text-neutral-400 hover:text-white"
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </h2>
+              </button>
             ))}
           </div>
 
           <button
             onClick={downloadFiles}
-            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition-colors duration-200"
+            className="flex items-center gap-2 bg-gradient-to-b from-white to-neutral-200 hover:to-neutral-300 text-black text-sm font-semibold px-4 py-1.5 rounded-full transition-all duration-200"
           >
             <Download className="h-4 w-4" />
-            <span>Download Files</span>
+            <span>Download</span>
           </button>
         </div>
       </div>
 
-      {/* Sandpack */}
       <SandpackProvider
         files={files}
         template="react"
         theme="dark"
         customSetup={{
-          dependencies: { ...Lookup.DEPENDANCY },
+          dependencies: { ...Lookup.DEPENDENCY },
           entry: "/index.js",
         }}
         options={{
@@ -194,12 +199,12 @@ function CodeView() {
           recompileDelay: 300,
         }}
       >
-        <SandpackLayout>
+        <SandpackLayout style={{ border: "none", borderRadius: 0 }}>
           {activeTab === "code" ? (
             <>
-              <SandpackFileExplorer style={{ height: "80vh" }} />
+              <SandpackFileExplorer style={{ height: PANE_HEIGHT }} />
               <SandpackCodeEditor
-                style={{ height: "80vh" }}
+                style={{ height: PANE_HEIGHT }}
                 showTabs
                 showLineNumbers
                 showInlineErrors
@@ -208,7 +213,7 @@ function CodeView() {
             </>
           ) : (
             <SandpackPreview
-              style={{ height: "80vh" }}
+              style={{ height: PANE_HEIGHT }}
               showNavigator
               showOpenInCodeSandbox={false}
               showRefreshButton
@@ -217,9 +222,8 @@ function CodeView() {
         </SandpackLayout>
       </SandpackProvider>
 
-      {/* Loading overlay */}
       {loading && (
-        <div className="p-10 bg-gray-900 opacity-80 absolute top-0 rounded-lg w-full h-full flex items-center justify-center gap-4">
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center gap-4 z-10">
           <Loader2Icon className="animate-spin h-10 w-10 text-white" />
           <h2 className="text-white text-lg">Generating files...</h2>
         </div>

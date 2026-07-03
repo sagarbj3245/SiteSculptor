@@ -11,11 +11,6 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
-  			'electric-blue': {
-  				'400': '#00BFFF',
-  				'500': '#00BFFF',
-  			},
-  			'neon-cyan': '#00FFFF',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

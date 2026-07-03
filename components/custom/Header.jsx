@@ -3,24 +3,22 @@ import { Code, Sparkles } from 'lucide-react';
 
 function Header() {
     return (
-        <header className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-50">
+        <header className="border-b border-neutral-800/80 bg-black/80 backdrop-blur-md sticky top-0 z-50">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
-                    {/* Logo and Title */}
                     <div className="flex items-center space-x-3">
-                        <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg">
-                            <Code className="h-5 w-5 text-white" />
+                        <div className="bg-gradient-to-b from-white to-neutral-300 p-2 rounded-lg shadow-[0_1px_8px_rgba(255,255,255,0.15)]">
+                            <Code className="h-5 w-5 text-black" />
                         </div>
-                        <h1 className="text-xl font-bold text-white">
+                        <h1 className="text-xl font-semibold tracking-tight text-white">
                             SiteSculptor
                         </h1>
                     </div>
 
-                    {/* Status Badge */}
                     <div className="flex items-center">
-                        <div className="flex items-center space-x-2 bg-green-500/10 text-green-400 px-3 py-1.5 rounded-full text-sm font-medium">
-                            <Sparkles className="h-4 w-4" />
-                            <span>All Rights @Sagar B J</span>
+                        <div className="flex items-center space-x-2 bg-neutral-900 text-neutral-400 border border-neutral-800 px-3 py-1.5 rounded-full text-sm font-medium">
+                            <Sparkles className="h-4 w-4 text-neutral-300" />
+                            <span>&copy; Sagar B J</span>
                         </div>
                     </div>
                 </div>

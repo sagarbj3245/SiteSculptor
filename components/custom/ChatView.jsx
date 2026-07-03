@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { MessagesContext } from "@/context/MessagesContext";
-import { ArrowRight, Link, Loader2Icon, Send } from "lucide-react";
+import { Loader2Icon, Send } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { useConvex, useMutation } from "convex/react";
 import { useParams } from "next/navigation";
@@ -17,8 +17,8 @@ function ChatView() {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const updateMessages = useMutation(api.workspace.UpdateWorkspace);
+  const messagesEndRef = useRef(null);
 
-  // Load workspace messages
   useEffect(() => {
     if (id) fetchWorkspaceMessages();
   }, [id]);
@@ -34,12 +34,12 @@ function ChatView() {
     }
   };
 
-  // Trigger AI response when last message is from user
   useEffect(() => {
     if (messages?.length > 0) {
       const lastRole = messages[messages.length - 1].role;
       if (lastRole === "user") generateAiResponse();
     }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const generateAiResponse = async () => {
@@ -55,7 +55,6 @@ function ChatView() {
 
       setMessages((prev) => [...prev, aiMessage]);
 
-      // Update messages in Convex workspace safely
       if (id) {
         await updateMessages({
           workspaceId: id,
@@ -64,82 +63,92 @@ function ChatView() {
       }
     } catch (error) {
       console.error("Error generating AI response:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "ai",
+          content:
+            "Sorry, something went wrong while generating a response. Please try again.",
+        },
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSend = () => {
-    if (!userInput?.trim()) return;
+    if (!userInput?.trim() || loading) return;
 
     const userMessage = { role: "user", content: userInput.trim() };
     setMessages((prev) => [...prev, userMessage]);
     setUserInput("");
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
   return (
-    <div className="relative h-[85vh] flex flex-col bg-gray-900">
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide p-4">
-        <div className="max-w-4xl mx-auto space-y-4">
+    <div className="flex flex-col h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-7.5rem)] rounded-xl border border-neutral-800 bg-neutral-900/40 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4">
+        <div className="space-y-4">
           {Array.isArray(messages) &&
             messages.map((msg, index) => (
               <div
                 key={index}
-                className={`p-4 rounded-lg ${
-                  msg.role === "user"
-                    ? "bg-gray-800/50 border border-gray-700"
-                    : "bg-gray-800/30 border border-gray-700"
-                }`}
+                className="p-4 rounded-lg bg-neutral-900/70 border border-neutral-800"
               >
                 <div className="flex items-start gap-3">
-                  <div
-                    className={`p-2 rounded-lg ${
+                  <span
+                    className={`px-2.5 py-1 rounded-md text-xs font-semibold uppercase tracking-wide shrink-0 ${
                       msg.role === "user"
-                        ? "bg-blue-500/20 text-blue-400"
-                        : "bg-purple-500/20 text-purple-400"
+                        ? "bg-white text-black"
+                        : "bg-neutral-800 text-neutral-200 border border-neutral-700"
                     }`}
                   >
                     {msg.role === "user" ? "You" : "AI"}
+                  </span>
+                  <div className="prose prose-invert prose-sm flex-1 min-w-0 break-words">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
-                  <ReactMarkdown className="prose prose-invert flex-1 overflow-auto">
-                    {msg.content}
-                  </ReactMarkdown>
                 </div>
               </div>
             ))}
 
           {loading && (
-            <div className="p-4 rounded-lg bg-gray-800/30 border border-gray-700">
-              <div className="flex items-center gap-3 text-gray-400">
+            <div className="p-4 rounded-lg bg-neutral-900/70 border border-neutral-800">
+              <div className="flex items-center gap-3 text-neutral-400">
                 <Loader2Icon className="animate-spin h-5 w-5" />
                 <p className="font-medium">Generating response...</p>
               </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Input Section */}
-      <div className="border-t border-gray-800 bg-gray-900/50 backdrop-blur-sm p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 flex flex-col gap-3">
-            <textarea
-              placeholder="Type your message here..."
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl p-4 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none resize-none h-32 transition-all duration-200"
-            />
-            <div className="flex justify-between items-center">
-              <div />
-              <button
-                onClick={handleSend}
-                disabled={!userInput?.trim()}
-                className="flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 rounded-xl px-4 py-2 transition-all duration-200 disabled:opacity-50"
-              >
-                <Send className="h-6 w-6 text-white" />
-              </button>
-            </div>
+      <div className="border-t border-neutral-800 bg-black/40 backdrop-blur-sm p-3">
+        <div className="flex flex-col gap-2">
+          <textarea
+            placeholder="Describe what you want to change or build..."
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="w-full bg-neutral-900/70 border border-neutral-800 rounded-lg p-3 text-neutral-100 placeholder-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-white/10 outline-none resize-none h-20 text-sm transition-all duration-200"
+          />
+          <div className="flex justify-end">
+            <button
+              onClick={handleSend}
+              disabled={!userInput?.trim() || loading}
+              aria-label="Send message"
+              className="flex items-center gap-2 bg-gradient-to-b from-white to-neutral-200 hover:to-neutral-300 text-black text-sm font-semibold rounded-lg px-4 py-2 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Send className="h-4 w-4" />
+              Send
+            </button>
           </div>
         </div>
       </div>
