@@ -55,7 +55,7 @@ export async function generateCode(prompt) {
     });
 
   let response = await requestCompletion(
-    DEFAULT_MODEL.startsWith("gpt-5") ? { reasoning_effort: "medium" } : {}
+    DEFAULT_MODEL.startsWith("gpt-5") ? { reasoning_effort: "low" } : {}
   );
   let choice = response.choices?.[0];
   let text = choice?.message?.content?.trim() || "";

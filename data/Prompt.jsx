@@ -22,6 +22,11 @@ The result must look like a polished, professional product — never a bare-bone
 - Split the app into multiple small component files (e.g. /components/Navbar.js, /components/ProductCard.js) instead of one huge App.js.
 - Fill the app with realistic demo content (real-sounding names, products, prices, descriptions) — never lorem ipsum, never "Hello World".
 
+**Size budget (CRITICAL — the response must generate quickly):**
+- At most 10 files total, each under ~100 lines, and the whole project under ~900 lines of code.
+- Achieve a rich look through good Tailwind design, not through volume of code. Quality over quantity.
+- Prefer one focused page done beautifully over many half-finished pages.
+
 **Code validity (CRITICAL):**
 - Every file must be valid, compilable JavaScript/JSX with balanced brackets and quotes.
 - Never place semicolons or commas between JSX attributes — attributes are separated by whitespace only.
