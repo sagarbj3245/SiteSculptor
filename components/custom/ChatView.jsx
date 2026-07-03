@@ -10,6 +10,8 @@ import Prompt from "@/data/Prompt";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
+const startedChatGenerations = new Set();
+
 function ChatView() {
   const { id } = useParams();
   const convex = useConvex();
@@ -35,11 +37,14 @@ function ChatView() {
   };
 
   useEffect(() => {
-    if (messages?.length > 0) {
-      const lastRole = messages[messages.length - 1].role;
-      if (lastRole === "user") generateAiResponse();
-    }
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!messages?.length) return;
+    const last = messages[messages.length - 1];
+    if (last.role !== "user") return;
+    const key = `${id}:${messages.length}:${last.content}`;
+    if (startedChatGenerations.has(key)) return;
+    startedChatGenerations.add(key);
+    generateAiResponse();
   }, [messages]);
 
   const generateAiResponse = async () => {

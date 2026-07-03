@@ -20,6 +20,8 @@ import JSZip from "jszip";
 
 const PANE_HEIGHT = "calc(100vh - 11.5rem)";
 
+const startedCodeGenerations = new Set();
+
 function CodeView() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("code");
@@ -46,14 +48,20 @@ function CodeView() {
     }
   };
 
+  const sanitizeCode = (code) =>
+    code
+      .replace(/import\.meta\.env\.\w+/g, "undefined")
+      .replace(/import\.meta\.env/g, "({})")
+      .replace(/import\.meta/g, "({})");
+
   const preprocessFiles = (filesObj) => {
     const processed = {};
     Object.entries(filesObj).forEach(([path, content]) => {
       if (typeof content === "string") {
-        processed[path] = { code: content };
+        processed[path] = { code: sanitizeCode(content) };
       } else if (content && typeof content === "object") {
         processed[path] = content.code
-          ? content
+          ? { ...content, code: sanitizeCode(content.code) }
           : { code: JSON.stringify(content, null, 2) };
       }
     });
@@ -61,10 +69,13 @@ function CodeView() {
   };
 
   useEffect(() => {
-    if (messages?.length > 0) {
-      const lastRole = messages[messages.length - 1].role;
-      if (lastRole === "user") generateAiCode();
-    }
+    if (!messages?.length) return;
+    const last = messages[messages.length - 1];
+    if (last.role !== "user") return;
+    const key = `${id}:${messages.length}:${last.content}`;
+    if (startedCodeGenerations.has(key)) return;
+    startedCodeGenerations.add(key);
+    generateAiCode();
   }, [messages]);
 
   const generateAiCode = async () => {

@@ -30,6 +30,7 @@ The result must look like a polished, professional product — never a bare-bone
 **Code validity (CRITICAL):**
 - Every file must be valid, compilable JavaScript/JSX with balanced brackets and quotes.
 - Never place semicolons or commas between JSX attributes — attributes are separated by whitespace only.
+- Never use import.meta (e.g. import.meta.env) or environment variables — the preview sandbox does not support them. Hardcode demo values instead.
 - Mentally verify each file would pass a Babel parse before returning it. A single syntax error breaks the entire preview.
 
 **User data (IMPORTANT):**
