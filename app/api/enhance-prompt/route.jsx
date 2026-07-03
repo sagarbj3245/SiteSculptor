@@ -1,6 +1,8 @@
 import { enhancePrompt } from "@/configs/AiModel";
 import { NextResponse } from "next/server";
 
+export const maxDuration = 60;
+
 export async function POST(req) {
   try {
     const { prompt } = await req.json();
