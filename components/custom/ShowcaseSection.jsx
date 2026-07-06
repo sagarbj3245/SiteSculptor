@@ -35,7 +35,7 @@ export function CodeTicker() {
 
 function BrowserFrame({ label, icon: Icon, children }) {
   return (
-    <div className="bg-neutral-900/50 backdrop-blur-xl rounded-2xl border border-neutral-800 overflow-hidden hover:border-neutral-700 transition-colors duration-300">
+    <div className="bg-neutral-900/50 backdrop-blur-xl rounded-2xl border border-neutral-800 overflow-hidden hover:border-neutral-700 transition-colors duration-300 h-full flex flex-col">
       <div className="flex items-center gap-2 px-4 py-3 border-b border-neutral-800 bg-black/40">
         <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
         <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
@@ -53,11 +53,11 @@ function BrowserFrame({ label, icon: Icon, children }) {
 export function DevPanel() {
   return (
     <BrowserFrame label="sitesculptor — building" icon={Terminal}>
-      <div className="relative">
+      <div className="relative flex-1 flex flex-col">
         <img
           src="https://user-images.githubusercontent.com/74038190/235224431-e8c8c12e-6826-47f1-89fb-2ddad83b3abf.gif"
           alt="Developer building a website with AI"
-          className="w-full h-52 object-cover grayscale contrast-125 opacity-90"
+          className="w-full flex-1 min-h-[13rem] object-cover grayscale contrast-125 opacity-90"
         />
         <div className="px-4 py-3 border-t border-neutral-800 bg-black/60 font-mono text-xs text-neutral-400 flex items-center gap-2">
           <span className="text-neutral-600">&gt;</span>
@@ -78,7 +78,7 @@ export function DevPanel() {
 export function StorePanel() {
   return (
     <BrowserFrame label="kickvault.shop — generated site" icon={Globe}>
-      <div className="relative h-52 bg-neutral-950 overflow-hidden select-none">
+      <div className="relative flex-1 min-h-[13rem] bg-neutral-950 overflow-hidden select-none">
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-neutral-800">
           <span className="text-xs font-semibold text-white tracking-wide">KICKVAULT</span>
           <div className="relative">

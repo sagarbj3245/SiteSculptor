@@ -188,7 +188,7 @@ function ReviewForm() {
   };
 
   return (
-    <div className="bg-neutral-900/50 backdrop-blur-xl rounded-2xl border border-neutral-800 p-6">
+    <div className="bg-neutral-900/50 backdrop-blur-xl rounded-2xl border border-neutral-800 p-6 h-full flex flex-col">
       <h3 className="text-white font-semibold text-lg mb-1 flex items-center gap-2">
         <Star className="h-5 w-5 text-neutral-300" />
         Write a review
@@ -197,7 +197,7 @@ function ReviewForm() {
         Share your experience — it appears on the wall instantly after AI
         approval.
       </p>
-      <div className="space-y-3">
+      <div className="space-y-3 flex-1 flex flex-col">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input
             value={name}
@@ -219,7 +219,7 @@ function ReviewForm() {
           onChange={(e) => setText(e.target.value)}
           maxLength={500}
           placeholder="What did you build? How was the experience?"
-          className="w-full bg-black/60 border border-neutral-800 rounded-lg p-3 text-neutral-100 placeholder-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-white/10 outline-none text-sm h-24 resize-none transition-all duration-200"
+          className="w-full bg-black/60 border border-neutral-800 rounded-lg p-3 text-neutral-100 placeholder-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-white/10 outline-none text-sm flex-1 min-h-[6rem] resize-none transition-all duration-200"
         />
         <button
           onClick={submitReview}
@@ -311,7 +311,7 @@ function Community() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 min-w-0">
+          <div className="grid grid-rows-[1fr_1fr] gap-6 min-w-0 h-full">
             <ReviewForm />
             <StorePanel />
           </div>
