@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { mutation, query } from './_generated/server';
+import { internalMutation, mutation, query } from './_generated/server';
 
 export const AddReview = mutation({
     args: {
@@ -16,6 +16,17 @@ export const AddReview = mutation({
             status: args.status,
             createdAt: Date.now(),
         });
+    },
+});
+
+export const ClearAllReviews = internalMutation({
+    args: {},
+    handler: async (ctx) => {
+        const all = await ctx.db.query('reviews').collect();
+        for (const review of all) {
+            await ctx.db.delete(review._id);
+        }
+        return all.length;
     },
 });
 
