@@ -70,3 +70,92 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes caret-blink {
+  0%, 45% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes type-line {
+  0% {
+    width: 0;
+  }
+  60%, 100% {
+    width: 100%;
+  }
+}
+
+@keyframes demo-cursor {
+  0%, 8% {
+    transform: translate(150px, 110px);
+  }
+  28%, 40% {
+    transform: translate(0, 0);
+  }
+  30%, 34% {
+    transform: translate(0, 0) scale(0.8);
+  }
+  60% {
+    transform: translate(90px, 60px);
+  }
+  85%, 100% {
+    transform: translate(150px, 110px);
+  }
+}
+
+@keyframes demo-press {
+  0%, 28% {
+    transform: scale(1);
+  }
+  31% {
+    transform: scale(0.94);
+  }
+  34%, 100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes demo-badge {
+  0%, 32% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  38%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes demo-toast {
+  0%, 36% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  44%, 78% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  86%, 100% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes float-soft {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
