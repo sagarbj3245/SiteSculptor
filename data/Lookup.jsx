@@ -6,6 +6,7 @@ export default {
     github: "https://github.com/sagarbj3245",
     linkedin: "https://www.linkedin.com/in/sagar-b-j-2855b3319/",
     twitter: "https://x.com/sagar_bj01",
+    instagram: "https://www.instagram.com/sagardrops/",
   },
 
   SUGGESTIONS: [
