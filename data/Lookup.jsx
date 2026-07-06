@@ -1,4 +1,13 @@
 export default {
+  DEVELOPER: {
+    name: "Sagar B J",
+    role: "Full-Stack Developer",
+    email: "sagarbj001@gmail.com",
+    github: "https://github.com/sagarbj3245",
+    linkedin: "https://www.linkedin.com/in/sagar-b-j-2855b3319/",
+    twitter: "https://x.com/sagar_bj01",
+  },
+
   SUGGESTIONS: [
     "Develop a Real-Time Weather App",
     "Create an E-commerce Platform",

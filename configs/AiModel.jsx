@@ -87,6 +87,29 @@ export async function generateCode(prompt) {
   }
 }
 
+export async function moderateReview(name, text) {
+  const response = await getClient().chat.completions.create({
+    model: DEFAULT_MODEL,
+    messages: [
+      {
+        role: "system",
+        content:
+          'You are a strict review moderator for a developer tool website. Approve only reviews that are positive, appreciative, or offer constructive improvement suggestions in respectful language. Reject anything vulgar, offensive, hateful, sexual, spammy, off-topic, promotional, or containing personal attacks. Also reject if the reviewer name itself is offensive. Reply with JSON: {"approve": true} or {"approve": false}.',
+      },
+      { role: "user", content: `Reviewer name: ${name}\nReview: ${text}` },
+    ],
+    max_completion_tokens: 100,
+    response_format: { type: "json_object" },
+  });
+
+  try {
+    const verdict = JSON.parse(response.choices?.[0]?.message?.content || "{}");
+    return verdict.approve === true;
+  } catch {
+    return false;
+  }
+}
+
 export function cleanJsonResponse(text) {
   return text.replace(/```json|```/g, "").trim();
 }
