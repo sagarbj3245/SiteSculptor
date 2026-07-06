@@ -22,37 +22,120 @@ class SectionBoundary extends React.Component {
     return { hasError: true };
   }
   render() {
-    return this.state.hasError ? null : this.props.children;
+    return this.state.hasError ? this.props.fallback ?? null : this.props.children;
   }
 }
 
-function Community() {
-  return (
-    <SectionBoundary>
-      <CommunityInner />
-    </SectionBoundary>
-  );
-}
-
-function CommunityInner() {
+function VisitsBadge() {
   const visits = useQuery(api.stats.GetVisits);
-  const reviews = useQuery(api.reviews.GetPublishedReviews);
   const recordVisit = useMutation(api.stats.RecordVisit);
-
-  const [name, setName] = useState("");
-  const [socialUrl, setSocialUrl] = useState("");
-  const [text, setText] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     try {
       if (!sessionStorage.getItem("ss_visit_counted")) {
         sessionStorage.setItem("ss_visit_counted", "1");
-        recordVisit();
+        recordVisit().catch(() => {});
       }
     } catch {}
   }, []);
+
+  return (
+    <div className="inline-flex items-center gap-2 bg-neutral-900/80 rounded-full px-5 py-2.5 border border-neutral-800">
+      <Users className="h-4 w-4 text-neutral-200" />
+      <span className="text-neutral-300 text-sm font-medium tracking-wide">
+        {visits === undefined ? (
+          "Counting builders..."
+        ) : (
+          <>
+            <span className="text-white font-semibold tabular-nums">
+              {visits.toLocaleString()}
+            </span>{" "}
+            {visits === 1 ? "builder has" : "builders have"} opened SiteSculptor
+          </>
+        )}
+      </span>
+      <span className="relative flex h-2 w-2">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+      </span>
+    </div>
+  );
+}
+
+function ReviewsList() {
+  const reviews = useQuery(api.reviews.GetPublishedReviews);
+
+  if (reviews === undefined) {
+    return (
+      <div className="flex items-center justify-center h-40 text-neutral-500 gap-2">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        Loading reviews...
+      </div>
+    );
+  }
+
+  if (reviews.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-40 text-neutral-500 border border-dashed border-neutral-800 rounded-2xl">
+        <Star className="h-6 w-6 mb-2" />
+        Be the first to leave a review
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {reviews.map((review) => (
+        <div
+          key={review._id}
+          className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-5 hover:border-neutral-700 transition-colors duration-300"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-b from-white to-neutral-300 text-black flex items-center justify-center font-semibold text-sm shrink-0">
+              {review.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <p className="text-white text-sm font-medium truncate">
+                  {review.name}
+                </p>
+                {review.socialUrl && (
+                  <a
+                    href={review.socialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="text-neutral-500 hover:text-white transition-colors"
+                    aria-label={`${review.name}'s profile`}
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className="h-3 w-3 text-neutral-200 fill-neutral-200"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          <p className="text-neutral-400 text-sm leading-relaxed break-words">
+            {review.text}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Community() {
+  const [name, setName] = useState("");
+  const [socialUrl, setSocialUrl] = useState("");
+  const [text, setText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState(null);
 
   const submitReview = async () => {
     if (!name.trim() || !text.trim() || submitting) return;
@@ -72,10 +155,15 @@ function CommunityInner() {
         setName("");
         setSocialUrl("");
         setText("");
-      } else {
+      } else if (res.status === 200) {
         setFeedback({
           ok: false,
           msg: "Your review was not published. Please keep it positive and respectful.",
+        });
+      } else {
+        setFeedback({
+          ok: false,
+          msg: "Could not publish right now. Please try again later.",
         });
       }
     } catch {
@@ -90,25 +178,18 @@ function CommunityInner() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_500px_at_50%_0%,rgba(255,255,255,0.04),transparent)]" />
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="text-center space-y-4 mb-14">
-          <div className="inline-flex items-center gap-2 bg-neutral-900/80 rounded-full px-5 py-2.5 border border-neutral-800">
-            <Users className="h-4 w-4 text-neutral-200" />
-            <span className="text-neutral-300 text-sm font-medium tracking-wide">
-              {visits === undefined ? (
-                "Counting builders..."
-              ) : (
-                <>
-                  <span className="text-white font-semibold tabular-nums">
-                    {visits.toLocaleString()}
-                  </span>{" "}
-                  {visits === 1 ? "builder has" : "builders have"} opened SiteSculptor
-                </>
-              )}
-            </span>
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-          </div>
+          <SectionBoundary
+            fallback={
+              <div className="inline-flex items-center gap-2 bg-neutral-900/80 rounded-full px-5 py-2.5 border border-neutral-800">
+                <Users className="h-4 w-4 text-neutral-200" />
+                <span className="text-neutral-300 text-sm font-medium tracking-wide">
+                  Builders worldwide use SiteSculptor
+                </span>
+              </div>
+            }
+          >
+            <VisitsBadge />
+          </SectionBoundary>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-200 to-neutral-500 leading-tight pb-1">
             Loved by Builders
           </h2>
@@ -187,61 +268,16 @@ function CommunityInner() {
           </div>
 
           <div className="lg:col-span-2">
-            {reviews === undefined ? (
-              <div className="flex items-center justify-center h-40 text-neutral-500 gap-2">
-                <Loader2 className="h-5 w-5 animate-spin" />
-                Loading reviews...
-              </div>
-            ) : reviews.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-40 text-neutral-500 border border-dashed border-neutral-800 rounded-2xl">
-                <Star className="h-6 w-6 mb-2" />
-                Be the first to leave a review
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {reviews.map((review) => (
-                  <div
-                    key={review._id}
-                    className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-5 hover:border-neutral-700 transition-colors duration-300"
-                  >
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="h-9 w-9 rounded-full bg-gradient-to-b from-white to-neutral-300 text-black flex items-center justify-center font-semibold text-sm shrink-0">
-                        {review.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-white text-sm font-medium truncate">
-                            {review.name}
-                          </p>
-                          {review.socialUrl && (
-                            <a
-                              href={review.socialUrl}
-                              target="_blank"
-                              rel="noopener noreferrer nofollow"
-                              className="text-neutral-500 hover:text-white transition-colors"
-                              aria-label={`${review.name}'s profile`}
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-                        </div>
-                        <div className="flex gap-0.5">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="h-3 w-3 text-neutral-200 fill-neutral-200"
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-neutral-400 text-sm leading-relaxed break-words">
-                      {review.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <SectionBoundary
+              fallback={
+                <div className="flex flex-col items-center justify-center h-40 text-neutral-500 border border-dashed border-neutral-800 rounded-2xl">
+                  <Star className="h-6 w-6 mb-2" />
+                  Reviews are warming up — check back in a moment
+                </div>
+              }
+            >
+              <ReviewsList />
+            </SectionBoundary>
           </div>
         </div>
       </div>

@@ -13,6 +13,8 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as reviews from "../reviews.js";
+import type * as stats from "../stats.js";
 import type * as workspace from "../workspace.js";
 
 /**
@@ -24,6 +26,8 @@ import type * as workspace from "../workspace.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  reviews: typeof reviews;
+  stats: typeof stats;
   workspace: typeof workspace;
 }>;
 export declare const api: FilterApi<
