@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Lookup from "@/data/Lookup";
-import { Code, Mail, X, Send } from "lucide-react";
+import { Code, Mail, X, Send, Loader2, CheckCircle2 } from "lucide-react";
 
 const GitHubIcon = ({ className }) => (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -33,17 +33,47 @@ function ContactModal({ dev, onClose }) {
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
+    const [sending, setSending] = useState(false);
+    const [sent, setSent] = useState(false);
+    const [error, setError] = useState(null);
 
-    const canSend = name.trim() && email.trim() && message.trim();
+    const canSend = name.trim() && email.trim() && message.trim() && !sending;
 
     const openMailApp = () => {
-        if (!canSend) return;
         const finalSubject = subject.trim() || `Message from ${name.trim()} via SiteSculptor`;
         const body = `Hi ${dev.name},\n\n${message.trim()}\n\n— ${name.trim()} (${email.trim()})`;
         window.location.href = `mailto:${dev.email}?subject=${encodeURIComponent(
             finalSubject
         )}&body=${encodeURIComponent(body)}`;
         onClose();
+    };
+
+    const sendMessage = async () => {
+        if (!canSend) return;
+
+        setSending(true);
+        setError(null);
+        try {
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, subject, message }),
+            });
+            const data = await res.json();
+
+            if (data.sent) {
+                setSent(true);
+                setTimeout(onClose, 2000);
+            } else if (res.status === 503) {
+                openMailApp();
+            } else {
+                setError(data.error || "Could not send. Please try again.");
+            }
+        } catch {
+            openMailApp();
+        } finally {
+            setSending(false);
+        }
     };
 
     return (
@@ -103,13 +133,30 @@ function ContactModal({ dev, onClose }) {
                         className="w-full bg-black/60 border border-neutral-800 rounded-lg p-3 text-neutral-100 placeholder-neutral-500 focus:border-neutral-500 focus:ring-2 focus:ring-white/10 outline-none text-sm h-28 resize-none transition-all duration-200"
                     />
                     <button
-                        onClick={openMailApp}
-                        disabled={!canSend}
+                        onClick={sendMessage}
+                        disabled={!canSend || sent}
                         className="w-full flex items-center justify-center gap-2 bg-gradient-to-b from-white to-neutral-200 hover:to-neutral-300 text-black text-sm font-semibold rounded-lg px-5 py-2.5 shadow-[0_1px_12px_rgba(255,255,255,0.15)] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                        <Send className="h-4 w-4" />
-                        Open in Mail App
+                        {sent ? (
+                            <>
+                                <CheckCircle2 className="h-4 w-4" />
+                                Message sent!
+                            </>
+                        ) : sending ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Sending...
+                            </>
+                        ) : (
+                            <>
+                                <Send className="h-4 w-4" />
+                                Send Message
+                            </>
+                        )}
                     </button>
+                    {error && (
+                        <p className="text-amber-300 text-xs text-center">{error}</p>
+                    )}
                     <p className="text-neutral-600 text-xs text-center">
                         or email directly:{" "}
                         <span className="text-neutral-400">{dev.email}</span>
